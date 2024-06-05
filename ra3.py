@@ -128,7 +128,7 @@ def main():
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-    if prompt := st.chat_input():
+    if prompt := st.chat_input("Your message here..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
@@ -136,20 +136,12 @@ def main():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                response = user_input(prompt)
+                responses = user_input(prompt)
                 placeholder = st.empty()
-                full_response = ''
-                for item in response['output_text']:
-                    full_response += item
-                    placeholder.markdown(full_response)
+                full_response = ' '.join(responses)
                 placeholder.markdown(full_response)
-        if response is not None:
+        if full_response:
             message = {"role": "assistant", "content": full_response}
             st.session_state.messages.append(message)
-
-    # 대화 이력 저장
-    joblib.dump(st.session_state.messages, f'data/{st.session_state.chat_id}-messages')
-    joblib.dump(past_chats, 'data/past_chats_list')
-
 if __name__ == "__main__":
     main()
