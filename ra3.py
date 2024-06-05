@@ -143,5 +143,10 @@ def main():
         if full_response:
             message = {"role": "assistant", "content": full_response}
             st.session_state.messages.append(message)
+
+    # 대화 이력 저장
+    joblib.dump(st.session_state.messages, f'data/{st.session_state.chat_id}-messages')
+    joblib.dump(past_chats, 'data/past_chats_list')
+
 if __name__ == "__main__":
     main()
